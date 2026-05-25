@@ -1,0 +1,309 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4" style="max-width:700px;">
+
+<br><br>
+
+<h3 class="mb-4">
+
+Create a New Listing
+
+</h3>
+
+<form
+
+method="POST"
+
+action="/listings"
+
+enctype="multipart/form-data"
+
+class="needs-validation"
+
+novalidate
+
+>
+
+<!-- TITLE -->
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Title
+
+</label>
+
+<input
+
+type="text"
+
+name="listing[title]"
+
+placeholder="Add a catchy title"
+
+class="form-control"
+
+required
+
+>
+
+<div class="invalid-feedback">
+
+Please enter title
+
+</div>
+
+</div>
+
+
+
+<!-- DESCRIPTION -->
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Description
+
+</label>
+
+<textarea
+
+name="listing[description]"
+
+class="form-control"
+
+rows="4"
+
+placeholder="Write description"
+
+required
+
+></textarea>
+
+<div class="invalid-feedback">
+
+Please enter description
+
+</div>
+
+</div>
+
+
+
+<!-- IMAGE -->
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Upload Listing Image
+
+</label>
+
+<input
+
+type="file"
+
+name="listing[image]"
+
+class="form-control"
+
+accept="image/*"
+
+required
+
+>
+
+<div class="invalid-feedback">
+
+Please upload image
+
+</div>
+
+<small class="text-muted">
+
+Allowed: JPG, JPEG, PNG (Max 5MB)
+
+</small>
+
+</div>
+
+
+
+<!-- PRICE + COUNTRY -->
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<label class="form-label">
+
+Price
+
+</label>
+
+<input
+
+type="number"
+
+name="listing[price]"
+
+placeholder="1200"
+
+class="form-control"
+
+min="0"
+
+required
+
+>
+
+<div class="invalid-feedback">
+
+Enter price
+
+</div>
+
+</div>
+
+
+
+<div class="col-md-8 mb-3">
+
+<label class="form-label">
+
+Country
+
+</label>
+
+<input
+
+type="text"
+
+name="listing[country]"
+
+placeholder="India"
+
+class="form-control"
+
+required
+
+>
+
+<div class="invalid-feedback">
+
+Enter country
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- LOCATION -->
+
+<div class="mb-3">
+
+<label class="form-label">
+
+Location
+
+</label>
+
+<input
+
+type="text"
+
+name="listing[location]"
+
+placeholder="Keonjhar, Odisha"
+
+class="form-control"
+
+required
+
+>
+
+<div class="invalid-feedback">
+
+Enter location
+
+</div>
+
+</div>
+
+
+
+<!-- BUTTON -->
+
+<button
+
+type="submit"
+
+class="btn btn-dark mt-3"
+
+>
+
+Add Listing
+
+</button>
+
+<br><br>
+
+</form>
+
+</div>
+
+
+
+<script>
+
+(() => {
+
+"use strict";
+
+const forms = document.querySelectorAll(
+".needs-validation"
+);
+
+Array.from(forms).forEach(
+
+(form)=>{
+
+form.addEventListener(
+
+"submit",
+
+(event)=>{
+
+if(
+!form.checkValidity()
+){
+
+event.preventDefault();
+
+event.stopPropagation();
+
+}
+
+form.classList.add(
+"was-validated"
+);
+
+},
+
+false
+
+);
+
+}
+
+);
+
+})();
+
+</script>

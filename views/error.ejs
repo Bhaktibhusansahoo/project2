@@ -1,0 +1,98 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="modal fade show"
+style="
+display:block;
+background:rgba(0,0,0,0.5);
+">
+
+<div class="modal-dialog modal-dialog-centered">
+
+<div class="modal-content">
+
+<div class="modal-header bg-danger text-white">
+
+<h5 class="modal-title">
+
+Error
+
+</h5>
+
+</div>
+
+<div class="modal-body text-center">
+
+<h3 class="mb-3">
+
+Something Went Wrong
+
+</h3>
+
+
+<!-- FLASH ERROR SUPPORT -->
+
+<%
+const flashError =
+(typeof error !== "undefined")
+? error
+: [];
+%>
+
+
+<%
+if(
+flashError &&
+flashError.length > 0
+){
+%>
+
+<div class="alert alert-danger">
+
+<%= flashError[0] %>
+
+</div>
+
+<%
+}
+%>
+
+
+<!-- DIRECT MESSAGE SUPPORT -->
+
+<%
+if(
+typeof message !==
+"undefined"
+&&
+message
+){
+%>
+
+<div class="alert alert-warning">
+
+<%= message %>
+
+</div>
+
+<%
+}
+%>
+
+</div>
+
+<div class="modal-footer">
+
+<a href="/listings"
+class="btn btn-dark">
+
+Go Back Home
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>

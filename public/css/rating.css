@@ -1,0 +1,50 @@
+/* Rating container */
+.rating-box{
+margin-top:10px;
+}
+
+/* STAR CONTAINER */
+.starability-slot{
+display:inline-block;
+direction:rtl;
+font-size:2rem;
+}
+
+/* HIDE RADIO */
+.starability-slot input{
+display:none;
+}
+
+/* STARS */
+.starability-slot label{
+float:right;
+cursor:pointer;
+color:#d3d3d3;
+transition:0.2s;
+}
+
+/* HOVER */
+.starability-slot label:hover,
+.starability-slot label:hover ~ label{
+color:#f5b301;
+}
+
+/* SELECTED */
+.starability-slot input:checked ~ label{
+color:#f5b301;
+}
+
+/* Reviews UI */
+.review-card{
+border-radius:12px;
+padding:10px;
+}
+
+.review-user{
+font-weight:600;
+color:#0d6efd;
+}
+
+.review-rating{
+font-size:0.95rem;
+}
