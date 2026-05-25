@@ -36,10 +36,11 @@ const userRouter = require("./routes/user");
 const listingRouter = require("./routes/listings");
 const reviewRouter = require("./routes/review");
 
-// ================= DATABASE (STABLE VERSION) =================
+// ================= DATABASE =================
 mongoose.set("strictQuery", false);
 
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl =
+  process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/test";
 
 mongoose
   .connect(dbUrl, {
@@ -60,7 +61,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// ================= BODY PARSERS =================
+// ================= BODY PARSER =================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -94,6 +95,7 @@ app.use(
   })
 );
 
+// ================= FLASH =================
 app.use(flash());
 
 // ================= PASSPORT =================
@@ -121,7 +123,7 @@ app.get("/", (req, res) => {
   res.redirect("/listings");
 });
 
-// ================= SAFE MULTER ERROR HANDLER =================
+// ================= MULTER ERROR HANDLER =================
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
@@ -132,11 +134,6 @@ app.use((err, req, res, next) => {
       });
     }
   }
-
-  if (res.headersSent) {
-    return next(err);
-  }
-
   next(err);
 });
 
@@ -144,9 +141,7 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   console.log("GLOBAL ERROR:", err.message);
 
-  if (res.headersSent) {
-    return;
-  }
+  if (res.headersSent) return;
 
   res.status(500).render("error.ejs", {
     message: err.message || "Something went wrong",
@@ -155,7 +150,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ================= 404 HANDLER =================
+// ================= 404 =================
 app.use((req, res) => {
   res.status(404).render("error.ejs", {
     message: "Page Not Found",
@@ -165,8 +160,8 @@ app.use((req, res) => {
 });
 
 // ================= SERVER =================
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on ${PORT}`);
 });
