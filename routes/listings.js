@@ -7,35 +7,61 @@ const { isLoggedIn, isOwner } = require("../middleware");
 const multer = require("multer");
 const { storage } = require("../cloudConfig");
 
-// SIMPLE UPLOAD (FAST + STABLE)
 const upload = multer({ storage });
+
+// ================= ASYNC WRAPPER =================
+function wrapAsync(fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch(next);
+  };
+}
 
 // ================= INDEX + CREATE =================
 router
   .route("/")
-  .get(listingController.index)
+  .get(wrapAsync(listingController.index))
   .post(
     isLoggedIn,
     upload.single("listing[image]"),
-    listingController.createListing
+    wrapAsync(listingController.createListing)
   );
 
 // ================= NEW =================
-router.get("/new", isLoggedIn, listingController.renderNewForm);
+router.get(
+  "/new",
+  isLoggedIn,
+  wrapAsync(listingController.renderNewForm)
+);
 
-// ================= SHOW / UPDATE / DELETE =================
-router
-  .route("/:id")
-  .get(listingController.showListing)
-  .put(
-    isLoggedIn,
-    isOwner,
-    upload.single("listing[image]"),
-    listingController.updateListing
-  )
-  .delete(isLoggedIn, isOwner, listingController.destroyListing);
+// ================= SHOW =================
+router.get(
+  "/:id",
+  wrapAsync(listingController.showListing)
+);
 
 // ================= EDIT =================
-router.get("/:id/edit", isLoggedIn, isOwner, listingController.renderEditForm);
+router.get(
+  "/:id/edit",
+  isLoggedIn,
+  isOwner,
+  wrapAsync(listingController.renderEditForm)
+);
+
+// ================= UPDATE =================
+router.put(
+  "/:id",
+  isLoggedIn,
+  isOwner,
+  upload.single("listing[image]"),
+  wrapAsync(listingController.updateListing)
+);
+
+// ================= DELETE =================
+router.delete(
+  "/:id",
+  isLoggedIn,
+  isOwner,
+  wrapAsync(listingController.destroyListing)
+);
 
 module.exports = router;

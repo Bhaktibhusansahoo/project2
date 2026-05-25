@@ -1,14 +1,15 @@
+// ================= ENV =================
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
-// ================= GLOBAL ERROR SAFETY =================
+// ================= GLOBAL SAFETY =================
 process.on("uncaughtException", (err) => {
-  console.log("UNCAUGHT EXCEPTION:", err.message);
+  console.log("🔥 UNCAUGHT EXCEPTION:", err);
 });
 
 process.on("unhandledRejection", (err) => {
-  console.log("UNHANDLED REJECTION:", err.message);
+  console.log("🔥 UNHANDLED REJECTION:", err);
 });
 
 // ================= IMPORTS =================
@@ -49,11 +50,10 @@ mongoose
     maxPoolSize: 10,
   })
   .then(() => {
-    console.log("Mongo Atlas Connected");
-    console.log("Database Ready");
+    console.log("✅ MongoDB Connected");
   })
   .catch((err) => {
-    console.log("DATABASE ERROR:", err.message);
+    console.log("❌ DATABASE ERROR:", err.message);
   });
 
 // ================= VIEW ENGINE =================
@@ -61,14 +61,10 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// ================= BODY PARSER =================
+// ================= MIDDLEWARE =================
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// ================= METHOD OVERRIDE =================
 app.use(methodOverride("_method"));
-
-// ================= STATIC FILES =================
 app.use(express.static(path.join(__dirname, "public")));
 
 // ================= SESSION =================
@@ -123,6 +119,13 @@ app.get("/", (req, res) => {
   res.redirect("/listings");
 });
 
+// ================= ASYNC WRAPPER =================
+function wrapAsync(fn) {
+  return function (req, res, next) {
+    fn(req, res, next).catch(next);
+  };
+}
+
 // ================= MULTER ERROR HANDLER =================
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
@@ -137,14 +140,15 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// ================= GLOBAL ERROR HANDLER =================
+// ================= GLOBAL ERROR HANDLER (FINAL FIXED) =================
 app.use((err, req, res, next) => {
-  console.log("GLOBAL ERROR:", err.message);
+  console.log("🔥 GLOBAL ERROR FULL:", err);
+  console.log("🔥 MESSAGE:", err?.message);
 
-  if (res.headersSent) return;
+  if (res.headersSent) return next(err);
 
   res.status(500).render("error.ejs", {
-    message: err.message || "Something went wrong",
+    message: err?.message || "Something went wrong",
     currentUser: req.user || null,
     error: [],
   });
@@ -163,5 +167,5 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on ${PORT}`);
+  console.log(`🚀 Server running on ${PORT}`);
 });
